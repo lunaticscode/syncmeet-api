@@ -1,10 +1,11 @@
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID ?? "";
-if (!GOOGLE_CLIENT_ID) console.log();
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET ?? "";
-if (!GOOGLE_CLIENT_SECRET) console.log();
 const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI ?? "";
-if (!GOOGLE_REDIRECT_URI) console.log();
-
+const ENV_CONFIGS: Record<string, string> = {
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  GOOGLE_REDIRECT_URI,
+};
 const GOOGLE_OAUTH_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
 const GOOGLE_ACCESS_SCOPE = ["email", "profile"].join(" ");
 
@@ -20,4 +21,5 @@ export {
   GOOGLE_ACCESS_SCOPE,
   GOOGLE_TOKEN_ENDPOINT,
   GOOGLE_USERINFO_ENDPOINT,
+  ENV_CONFIGS,
 };

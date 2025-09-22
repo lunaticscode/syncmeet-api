@@ -1,8 +1,8 @@
 import fs from "node:fs";
-import { importPKCS8, importSPKI, type CryptoKey } from "jose";
+import { importPKCS8, importSPKI } from "jose";
 import { AppError } from "../utils/error";
-const ALG = "RS256";
-
+const JWT_ENCRYPT_ALGO = process.env.JWT_ENCRYPT_ALGO ?? "";
+const ENV_CONFIGS: Record<string, string> = { JWT_ENCRYPT_ALGO };
 let privateKeyPem;
 let publicKeyPem;
 
@@ -41,6 +41,6 @@ if (!publicKeyPem.trim()) {
   );
 }
 
-const jwtPrivateKey = await importPKCS8(privateKeyPem, ALG);
-const jwtPublicKey = await importSPKI(publicKeyPem, ALG);
-export { jwtPrivateKey, jwtPublicKey };
+const jwtPrivateKey = await importPKCS8(privateKeyPem, JWT_ENCRYPT_ALGO);
+const jwtPublicKey = await importSPKI(publicKeyPem, JWT_ENCRYPT_ALGO);
+export { jwtPrivateKey, jwtPublicKey, JWT_ENCRYPT_ALGO, ENV_CONFIGS };
