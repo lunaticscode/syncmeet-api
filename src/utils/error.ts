@@ -13,7 +13,8 @@ type ErrorCodes =
   | "INVALID_CREATE_USER_DATA"
   | "VALIDATOR_ERROR"
   | "NOT_FOUND_USER"
-  | "CONTROLLER_OUTPUT_PARSE_ERROR";
+  | "CONTROLLER_OUTPUT_PARSE_ERROR"
+  | "INVALID_ENV_CONFIG";
 
 const ERROR_CODES: Record<ErrorCodes, { statusCode: number }> = {
   UNKNOWN_ERROR: {
@@ -60,6 +61,9 @@ const ERROR_CODES: Record<ErrorCodes, { statusCode: number }> = {
   },
   CONTROLLER_OUTPUT_PARSE_ERROR: {
     statusCode: 422,
+  },
+  INVALID_ENV_CONFIG: {
+    statusCode: 500,
   },
 };
 
