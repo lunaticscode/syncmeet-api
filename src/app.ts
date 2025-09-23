@@ -35,6 +35,6 @@ app.use(errorMiddleware);
 
 app.listen(APP_PORT, () => {
   dbConnect();
-  console.log("NODE_ENV :: ", process.env.NODE_ENV ?? "development");
-  console.log(`✅[express] Express running on ${APP_PORT}.`);
+  console.log("⚙️ NODE_ENV :: ", process.env.NODE_ENV ?? "development");
+  console.log(`🚀[express] Express running on ${APP_PORT}.`);
 });

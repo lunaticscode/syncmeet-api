@@ -21,7 +21,7 @@ const validateEnvConfigs = () => {
       );
     }
   }
-  console.log(`✅Success to load env config values.`);
+  console.log(`⚙️ Success to load env config values.`);
 };
 
 export { validateEnvConfigs };

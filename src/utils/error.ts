@@ -14,7 +14,9 @@ type ErrorCodes =
   | "VALIDATOR_ERROR"
   | "NOT_FOUND_USER"
   | "CONTROLLER_OUTPUT_PARSE_ERROR"
-  | "INVALID_ENV_CONFIG";
+  | "INVALID_ENV_CONFIG"
+  | "INVALID_OAUTH_AUTH_CODE"
+  | "INVALID_OAUTH_CSRF_TOKEN";
 
 const ERROR_CODES: Record<ErrorCodes, { statusCode: number }> = {
   UNKNOWN_ERROR: {
@@ -64,6 +66,12 @@ const ERROR_CODES: Record<ErrorCodes, { statusCode: number }> = {
   },
   INVALID_ENV_CONFIG: {
     statusCode: 500,
+  },
+  INVALID_OAUTH_AUTH_CODE: {
+    statusCode: 403,
+  },
+  INVALID_OAUTH_CSRF_TOKEN: {
+    statusCode: 403,
   },
 };
 

@@ -24,7 +24,7 @@ export const dbConnect = () => {
   });
 
   mongoose.connection.on("disconnected", () => {
-    console.warn("💤[mongo] disconnected");
+    console.warn("💤 [mongo] disconnected");
   });
 
   return connection;

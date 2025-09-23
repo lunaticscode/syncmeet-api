@@ -3,6 +3,7 @@ import querystring from "node:querystring";
 import {
   GOOGLE_ACCESS_SCOPE,
   GOOGLE_CLIENT_ID,
+  GOOGLE_OAUTH_CSRF_TOKEN,
   GOOGLE_OAUTH_ENDPOINT,
   GOOGLE_REDIRECT_URI,
   GOOGLE_TOKEN_ENDPOINT,
@@ -22,7 +23,7 @@ const googleOauthController: AppController = (_, res) => {
     scope: GOOGLE_ACCESS_SCOPE,
     access_type: "offline",
     prompt: "consent",
-    state: "custom_csrf_token_or_random_string", // CSRF 보호용 state 값
+    state: GOOGLE_OAUTH_CSRF_TOKEN, // CSRF 보호용 state 값
   });
   res.redirect(`${GOOGLE_OAUTH_ENDPOINT}?${params}`);
 };
@@ -30,10 +31,21 @@ const googleOauthController: AppController = (_, res) => {
 const googleOauthCallbackController: AppController = async (req, res) => {
   const code = req.query.code as string;
   const state = req.query.state as string;
+
   console.log({ state });
   if (!code)
-    return res.status(400).json({ error: "Missing authorization code" });
-
+    throw new AppError(
+      "",
+      "INVALID_OAUTH_AUTH_CODE",
+      `${TRACE_DIR}.googleOauthCallbackController > code`
+    );
+  if (state !== GOOGLE_OAUTH_CSRF_TOKEN) {
+    throw new AppError(
+      "",
+      "INVALID_OAUTH_CSRF_TOKEN",
+      `${TRACE_DIR}.googleOauthCallbackController > csrf state`
+    );
+  }
   try {
     // 1. Authorization Code로 Access Token 요청
     const tokenRes = await axios.post(
