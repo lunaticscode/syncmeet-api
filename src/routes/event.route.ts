@@ -1,14 +1,15 @@
 import { Router } from "express";
 import { createEventController } from "../controllers/event.controller";
 import { jsonBodyValidator } from "../validators";
-import { z } from "zod";
-import { eventCreateInputSchema } from "../validators/schemas/event.schema";
+import { createEventBodySchema } from "../validators/schemas/event.schema";
+import authMiddleware from "../middlewares/auth.middleware";
 
 const eventRoute = Router();
 
 eventRoute.post(
   "/",
-  jsonBodyValidator(eventCreateInputSchema),
+  authMiddleware,
+  jsonBodyValidator(createEventBodySchema),
   createEventController
 );
 export default eventRoute;

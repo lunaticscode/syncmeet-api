@@ -32,7 +32,7 @@ const getUserController: AppController = async (req, res) => {
       );
     }
 
-    return res.json(parsedUser);
+    return res.json(parsedUser.data);
   } catch (err) {
     if (err instanceof AppError) {
       throw err;

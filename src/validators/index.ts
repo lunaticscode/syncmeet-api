@@ -27,6 +27,8 @@ const jsonBodyValidator = (schema: ZodType) => {
           `${TRACE_DIR}.validationResult`
         );
       }
+
+      req.body = validationResult.data;
       next();
     } catch (err) {
       if (err instanceof AppError) {

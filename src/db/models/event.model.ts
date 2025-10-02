@@ -1,8 +1,4 @@
 import { Document, model, Schema, SchemaTypes, Types } from "mongoose";
-
-// import { zObjectId, zTrimmed } from "../../libs/zodSchema";
-// import type { ZodType } from "zod";
-// import { z } from "zod";
 const { String, ObjectId, Date } = SchemaTypes;
 
 export interface IEvent {
@@ -17,24 +13,8 @@ export interface IEvent {
   updatedBy?: Types.ObjectId;
 }
 
-// const eventCreateApiSchema: ZodType<Omit<IEvent, "updatedBy">> = z.object({
-//   calendarId: zObjectId,
-//   ownerId: zObjectId,
-//   title: z
-//     .string()
-//     .min(1, "")
-//     .max(50, "")
-//     .transform((str) => str.trim()),
-//   description: z
-//     .string()
-//     .max(200, "")
-//     .transform((v) => v.trim())
-//     .optional(),
-//   location,
-// });
-
 const DIVIDER_MIN = 15 * 1000 * 60;
-const isAlignedTo15m = (d: Date) => {
+const _isAlignedTo15m = (d: Date) => {
   return d.getTime() % DIVIDER_MIN === 0;
 };
 
@@ -73,7 +53,7 @@ const eventSchema = new Schema<EventSchema>({
     required: true,
     index: true,
     validate: {
-      validator: isAlignedTo15m,
+      validator: _isAlignedTo15m,
       message: "start must be aligned to 15-minute boundaries",
     },
   },
@@ -83,7 +63,7 @@ const eventSchema = new Schema<EventSchema>({
     index: true,
     validate: [
       {
-        validator: isAlignedTo15m,
+        validator: _isAlignedTo15m,
         message: "end must be aligned to 15-minute boundaries",
       },
       {

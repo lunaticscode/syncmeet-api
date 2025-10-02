@@ -14,6 +14,10 @@ export const zObjectId: ZodType<Types.ObjectId> = z
     v instanceof Types.ObjectId ? v : new Types.ObjectId(v as any)
   );
 
+export const zStringObjectId = z
+  .string()
+  .regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId.");
+
 export const zDate: ZodType<Date> = z
   .union([z.string(), z.date()])
   .transform((v) => (v instanceof Date ? v : new Date(v)))

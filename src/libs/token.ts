@@ -5,7 +5,7 @@ import { AppError } from "../utils/error";
 
 const ALG = "RS256";
 const TRACE_DIR = "libs.token";
-const verifyAndDecodeToken = async (token: string) => {
+const _verifyAndDecodeToken = async (token: string) => {
   try {
     const decodedPayload = await jwtVerify(token, jwtPublicKey, {
       algorithms: [ALG],
@@ -20,7 +20,7 @@ const verifyAndDecodeToken = async (token: string) => {
   }
 };
 
-const encodeToken = async (payload: JWTPayload, exp: string = "24h") => {
+const _encodeToken = async (payload: JWTPayload, exp: string = "24h") => {
   try {
     const token = await new SignJWT(payload)
       .setProtectedHeader({ alg: ALG })
@@ -39,7 +39,7 @@ const encodeToken = async (payload: JWTPayload, exp: string = "24h") => {
 
 const getSignedToken = async (payload: JWTPayload) => {
   try {
-    return await encodeToken(payload);
+    return await _encodeToken(payload);
   } catch (err) {
     throw err;
   }
@@ -48,7 +48,7 @@ const getSignedToken = async (payload: JWTPayload) => {
 const getDecodedPayload = async (token: string) => {
   if (!token) return null;
   try {
-    return await verifyAndDecodeToken(token);
+    return await _verifyAndDecodeToken(token);
   } catch (err) {
     throw err;
   }

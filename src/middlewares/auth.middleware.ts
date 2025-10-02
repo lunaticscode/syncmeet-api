@@ -21,6 +21,13 @@ const authMiddleware: AppMiddleware = async (req, res, next) => {
         `${TRACE_DIR}.authMiddleware > tokenValidationResult`
       );
     }
+    if (!("id" in tokenValidationResult.payload)) {
+      throw new AppError(
+        "",
+        "INVALID_USER_TOKEN",
+        `${TRACE_DIR}.authMiddleware > Check tokenValidation.payload`
+      );
+    }
     const userId = tokenValidationResult.payload.id as string;
     req.id = userId;
     next();
