@@ -10,7 +10,6 @@ import CalendarModel, {
 import YearAggModel from "../db/models/year-agg.model";
 
 const EVENT_SERVICE_TRACE_DIR = "services.event";
-
 const FIFTEEN_MIN = 15 * 1000 * 60;
 const isAlignedTo15m = (d: Date) => d.getTime() % FIFTEEN_MIN === 0;
 
@@ -171,8 +170,8 @@ const CREATE_EVENT_ERROR_MESSAGES = {
 };
 
 type CreateEventsInput = {
-  ownerId: string;
-  calendarId: string;
+  ownerId: Types.ObjectId;
+  calendarId: Types.ObjectId;
   events: Pick<
     IEvent,
     "title" | "description" | "location" | "start" | "end"
@@ -190,7 +189,7 @@ const createEvents = async (input: CreateEventsInput) => {
      */
 
     // Validation (1)
-    if (!input.calendarId.trim() || !input.ownerId.trim()) {
+    if (!input.calendarId || !input.ownerId) {
       throw new AppError(
         "",
         "BAD_REQUEST",
@@ -207,8 +206,8 @@ const createEvents = async (input: CreateEventsInput) => {
 
     // Validation (2)
     const isValidOwner = await _validationCalendarOwner(
-      new Types.ObjectId(input.calendarId),
-      new Types.ObjectId(input.ownerId)
+      input.calendarId,
+      input.ownerId
     );
     if (!isValidOwner) {
       throw new AppError(
@@ -324,4 +323,55 @@ const createEvents = async (input: CreateEventsInput) => {
   }
 };
 
-export { createEvents };
+const getMonthlyEventCounts = async (
+  calendarId: Types.ObjectId,
+
+  year: number
+) => {
+  try {
+    const result = await YearAggModel.findOne({ calendarId, year })
+      .select("counts")
+      .lean();
+    if (!result) {
+      throw new AppError(
+        "",
+        "NOTFOUND_CALENDAR",
+        `${EVENT_SERVICE_TRACE_DIR}.getMonthEvents > YearAggModel.findOne`
+      );
+    }
+    const counts = result.counts;
+    return counts;
+  } catch (err) {
+    if (err instanceof AppError) {
+      throw err;
+    }
+    throw new AppError("", "UNKNOWN_ERROR");
+  }
+};
+
+const getDetailEvents = async (
+  calendarId: Types.ObjectId,
+  ownerId: Types.ObjectId,
+  date: Date
+) => {
+  try {
+    const [startYear, startMonth, startDate] = [
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+    ];
+    const events = await EventModel.find({
+      calendarId,
+      ownerId,
+      $and: [
+        { start: { $lt: new Date(startYear, startMonth, startDate + 1) } },
+        { end: { $gt: new Date(startYear, startMonth, startDate) } },
+      ],
+    })
+      .lean()
+      .select("_id title description location start end");
+    return events;
+  } catch (err) {}
+};
+
+export { createEvents, getMonthlyEventCounts, getDetailEvents };

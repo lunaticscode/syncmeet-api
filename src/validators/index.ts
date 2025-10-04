@@ -10,7 +10,7 @@ const jsonBodyValidator = (schema: ZodType) => {
         next();
       }
       const body = req.body ?? null;
-
+      console.log({ body });
       if (!body || !Object.keys(body).length) {
         throw new AppError(
           "Body is empty. Please check body(payload)",
@@ -27,7 +27,6 @@ const jsonBodyValidator = (schema: ZodType) => {
           `${TRACE_DIR}.validationResult`
         );
       }
-
       req.body = validationResult.data;
       next();
     } catch (err) {

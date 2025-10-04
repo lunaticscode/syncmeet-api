@@ -16,7 +16,8 @@ type ErrorCodes =
   | "CONTROLLER_OUTPUT_PARSE_ERROR"
   | "INVALID_ENV_CONFIG"
   | "INVALID_OAUTH_AUTH_CODE"
-  | "INVALID_OAUTH_CSRF_TOKEN";
+  | "INVALID_OAUTH_CSRF_TOKEN"
+  | "NOTFOUND_CALENDAR";
 
 const ERROR_CODES: Record<ErrorCodes, { statusCode: number }> = {
   UNKNOWN_ERROR: {
@@ -72,6 +73,9 @@ const ERROR_CODES: Record<ErrorCodes, { statusCode: number }> = {
   },
   INVALID_OAUTH_CSRF_TOKEN: {
     statusCode: 403,
+  },
+  NOTFOUND_CALENDAR: {
+    statusCode: 404,
   },
 };
 

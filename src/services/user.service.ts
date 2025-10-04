@@ -6,7 +6,6 @@ import UserModel, {
 import { AppError } from "../utils/error";
 import { userCreateInputSchema } from "../validators/schemas/user.schema";
 import mongoose from "mongoose";
-import type { CalendarSchema } from "../db/models/calendar.model";
 import CalendarModel from "../db/models/calendar.model";
 
 const DEFAULT_CREATED_CALENDAR_NAME = "My Calendar";
@@ -71,7 +70,7 @@ export const createUser = async (inputUser: IUser) => {
   }
 };
 
-export const getUser = async (id: string) => {
+export const getUser = async (id: Types.ObjectId) => {
   try {
     const user = await UserModel.findById(id).lean();
     return user;

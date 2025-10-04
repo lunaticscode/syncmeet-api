@@ -31,23 +31,28 @@ const googleOauthController: AppController = (_, res) => {
 const googleOauthCallbackController: AppController = async (req, res) => {
   const code = req.query.code as string;
   const state = req.query.state as string;
-
-  console.log({ state });
-  if (!code)
-    throw new AppError(
-      "",
-      "INVALID_OAUTH_AUTH_CODE",
-      `${TRACE_DIR}.googleOauthCallbackController > code`
-    );
-  if (state !== GOOGLE_OAUTH_CSRF_TOKEN) {
-    throw new AppError(
-      "",
-      "INVALID_OAUTH_CSRF_TOKEN",
-      `${TRACE_DIR}.googleOauthCallbackController > csrf state`
-    );
-  }
   try {
-    // 1. Authorization Code로 Access Token 요청
+    if (!code)
+      throw new AppError(
+        "",
+        "INVALID_OAUTH_AUTH_CODE",
+        `${TRACE_DIR}.googleOauthCallbackController > code`
+      );
+    if (state !== GOOGLE_OAUTH_CSRF_TOKEN) {
+      throw new AppError(
+        "",
+        "INVALID_OAUTH_CSRF_TOKEN",
+        `${TRACE_DIR}.googleOauthCallbackController > csrf state`
+      );
+    }
+
+    /**
+     * Oauth-Callback steps
+     * (1) get access-token
+     * (2) get profile
+     */
+
+    // (1)
     const tokenRes = await axios.post(
       GOOGLE_TOKEN_ENDPOINT,
       querystring.stringify({
@@ -62,7 +67,7 @@ const googleOauthCallbackController: AppController = async (req, res) => {
 
     const { access_token } = tokenRes.data;
 
-    // 2. 사용자 정보 조회
+    // (2)
     const userRes = await axios.get(GOOGLE_USERINFO_ENDPOINT, {
       headers: { Authorization: `Bearer ${access_token}` },
     });
@@ -97,7 +102,7 @@ const googleOauthCallbackController: AppController = async (req, res) => {
     res.cookie(tokenKey, tokenValue, { httpOnly: true, path: "/" });
     return res.redirect("http://localhost:5173/oauth-success");
   } catch (err) {
-    return res.redirect("http://localhost:5173/oauth-error");
+    return res.redirect("http://localhost:5173/signin");
   }
 };
 

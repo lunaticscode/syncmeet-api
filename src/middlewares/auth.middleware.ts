@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { USER_TOKEN_KEY } from "../consts/app";
 import { getDecodedPayload } from "../libs/token";
 import { AppError } from "../utils/error";
@@ -29,7 +30,7 @@ const authMiddleware: AppMiddleware = async (req, res, next) => {
       );
     }
     const userId = tokenValidationResult.payload.id as string;
-    req.id = userId;
+    req.id = new Types.ObjectId(userId);
     next();
   } catch (err) {
     if (err instanceof AppError) {

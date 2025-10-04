@@ -12,6 +12,7 @@ import oauthRoute from "./routes/oauth.route";
 import errorMiddleware from "./middlewares/error.middleware";
 import { dbConnect } from "./db/client";
 import cookieParser from "cookie-parser";
+import loggingMiddleware from "./middlewares/logging.middleware";
 
 const rateLiimter = rateLimit({
   windowMs: 60 * 1000,
@@ -29,7 +30,7 @@ app.use(compression());
 /****************************/
 
 app.use("/oauth", oauthRoute);
-app.use("/api", apiRoute);
+app.use("/api", loggingMiddleware, apiRoute);
 
 app.use(errorMiddleware);
 

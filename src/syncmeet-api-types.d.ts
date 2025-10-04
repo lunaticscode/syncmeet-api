@@ -1,11 +1,13 @@
 import "express";
+import type { Types } from "mongoose";
 
 declare global {
   namespace Express {
     interface Request {
       // identity?: { token: string };
       /** @description user unique id(= mongodob objectId) */
-      id?: string;
+      id?: Types.ObjectId;
+      calendarId?: Types.ObjectId;
     }
   }
   type AppController = (
